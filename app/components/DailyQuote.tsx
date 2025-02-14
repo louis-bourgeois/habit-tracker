@@ -22,7 +22,7 @@ const DailyQuote = () => {
   }, []);
 
   return (
-    <div className="p-6 rounded-lg shadow-lg my-4 border border-white">
+    <div className="p-6 rounded-lg shadow-lg my-4 border border-[#CD985A]">
       {quote ? (
         <>
           <p className="italic text-lg">"{quote.citation}"</p>

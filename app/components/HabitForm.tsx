@@ -22,7 +22,6 @@ const HabitForm = ({ initialData, onClose, onSave }: HabitFormProps) => {
   const [nom, setNom] = useState(initialData?.nom || "");
   const [difficulte, setDifficulte] = useState(initialData?.difficulte || 1);
   const [priorite, setPriorite] = useState(initialData?.priorite || 1);
-  // Optionnel : récupérer et afficher la liste des sections pour le dropdown
   const [sections, setSections] = useState<any[]>([]);
   const [sectionId, setSectionId] = useState(initialData?.section_id || null);
 
@@ -33,14 +32,30 @@ const HabitForm = ({ initialData, onClose, onSave }: HabitFormProps) => {
       .catch((err) => console.error("Erreur lors de la récupération des sections", err));
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const submitHabit = () => {
     onSave({ nom, difficulte, priorite, section_id: sectionId });
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    submitHabit();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter") {
+      console.log("test")
+      e.preventDefault();
+      submitHabit();
+    }
+  };
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-40">
-      <div className="bg-white dark:bg-gray-800 p-6 rounded shadow-lg w-80">
+    <div
+      className="fixed inset-0 flex items-center justify-center  z-40"
+      tabIndex={0}
+      
+    >
+      <div className="p-6 rounded shadow-lg w-80">
         <h2 className="text-xl font-bold mb-4">
           {initialData ? "Modifier l'habitude" : "Nouvelle habitude"}
         </h2>
@@ -52,6 +67,7 @@ const HabitForm = ({ initialData, onClose, onSave }: HabitFormProps) => {
             onChange={(e) => setNom(e.target.value)}
             className="w-full p-2 border rounded"
             required
+            onKeyDown={handleKeyDown}
           />
           <div>
             <label className="block mb-1">Difficulté:</label>
@@ -60,8 +76,10 @@ const HabitForm = ({ initialData, onClose, onSave }: HabitFormProps) => {
               onChange={(e) => setDifficulte(Number(e.target.value))}
               className="w-full p-2 border rounded"
             >
-              {[1,2,3,4,5].map((d) => (
-                <option key={d} value={d}>{d}</option>
+              {[1, 2, 3, 4, 5].map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
               ))}
             </select>
           </div>
@@ -72,8 +90,10 @@ const HabitForm = ({ initialData, onClose, onSave }: HabitFormProps) => {
               onChange={(e) => setPriorite(Number(e.target.value))}
               className="w-full p-2 border rounded"
             >
-              {[1,2,3,4,5].map((p) => (
-                <option key={p} value={p}>{p}</option>
+              {[1, 2, 3, 4, 5].map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
               ))}
             </select>
           </div>
@@ -86,12 +106,18 @@ const HabitForm = ({ initialData, onClose, onSave }: HabitFormProps) => {
             >
               <option value="">Aucune</option>
               {sections.map((s) => (
-                <option key={s.id} value={s.id}>{s.nom}</option>
+                <option key={s.id} value={s.id}>
+                  {s.nom}
+                </option>
               ))}
             </select>
           </div>
           <div className="flex justify-end space-x-2">
-            <button type="button" onClick={onClose} className="px-4 py-2 rounded bg-gray-400">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 rounded"
+            >
               Annuler
             </button>
             <button type="submit" className="px-4 py-2 rounded bg-blue-500 text-white">
